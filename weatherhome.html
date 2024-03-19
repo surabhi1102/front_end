@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather app</title>
+    <link rel="stylesheet" href="weatherhome.css">
+</head>
+
+<body>
+
+    <div class="weather-container">
+        <div class="search">
+            <input type="text" placeholder="Enter City Name" spellcheck="false">
+            <button><img src="images/search.png"></button>
+        </div>
+        <div class="Weather">
+            <img src="images/rain.png" class="weatherIcon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">Melbourne</h2>
+        </div>
+        <div class="details">
+            <div class="col">
+                <img src="images/humidity.png">
+                <div>
+                    <p class="Humidity">50%</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <img src="images/wind.png">
+                <div>
+                    <p class="Wind">50 km/h</p>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+<script>
+
+const apiKey = "4d35b16ed1deb131812a433160fcd7c5";
+const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+const searchBox = document.querySelector(".search input");
+const searchBtn = document.querySelector(".search button");
+const weatherIcon = document.querySelector(".weatherIcon"); 
+
+async function checkWeather(city) {
+    const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+    const data = await response.json();
+    console.log(data);
+
+    document.querySelector(".city").innerHTML = data.name;
+    document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+    document.querySelector(".Humidity").innerHTML = data.main.humidity + "%"; // Corrected class name
+    document.querySelector(".Wind").innerHTML = data.wind.speed + "km/h"; // Corrected class name
+
+    // Update the src attribute of weatherIcon based on the weather condition
+    if (data.weather[0].main == "Clouds") {
+        weatherIcon.src = "images/clouds.png";
+    } else if (data.weather[0].main == "Clear") {
+        weatherIcon.src = "images/clear.png";
+    } else if (data.weather[0].main == "Rain") {
+        weatherIcon.src = "images/rain.png";
+    } else if (data.weather[0].main == "Drizzle") {
+        weatherIcon.src = "images/drizzle.png";
+    } else if (data.weather[0].main == "Mist") {
+        weatherIcon.src = "images/mist.png";
+    }
+}
+
+searchBtn.addEventListener("click", () => {
+    checkWeather(searchBox.value);
+});
+
+checkWeather(); // Call the function on page load
+
+searchBtn.addEventListener("click", () => {
+    checkWeather(searchBox.value);
+});
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
